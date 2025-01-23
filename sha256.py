@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 spin = 1  # 1 or -1
 proof_of_work_size = 5
 range_compute = 1000000 #needs to be computable
-_range =        1000000 # needs to be the same as range_compute
+_range =        1000000 #simply add optimal ghost values to range then rerun
 SHAmsg = "George"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
