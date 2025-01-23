@@ -11,10 +11,10 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
-proof_of_work_size = 10
+proof_of_work_size = 8
 range_compute = 1000000 #needs to be computable
-_range =        1119000000 #simply add optimal ghost values to range then rerun
-SHAmsg = "George"
+_range =        1000000 #simply add optimal ghost values to range then rerun
+SHAmsg = "GeorgeW"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
     target = '0' * target_zeros
@@ -237,7 +237,7 @@ class QuantumCommunicator:
         if iteration == total:
             print()
             
-    def mine_sha256_threaded(self, target_zeros, ghost_values, chunk_size=_range):
+    def mine_sha256_threaded(self, target_zeros, ghost_values, chunk_size=range_compute):
         start_time = time.time()
         
         for nonce in ghost_values:

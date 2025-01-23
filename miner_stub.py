@@ -32,7 +32,7 @@ def mine_sha256_threaded(target_zeros, ghost_values, chunk_size):
             return nonce
  
 proof_of_work_size = 8
-range_compute = 100000 #needs to be computable
+range_compute = 100000000 #needs to be computable
 _range =        1119000000 #simply add optimal ghost values to range then rerun
 SHAmsg = "GeorgeW"
 message ="" #leave empty
