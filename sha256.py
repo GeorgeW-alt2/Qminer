@@ -12,9 +12,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
 proof_of_work_size = 5
-rerun = 1000000 # simply add optimal ghost values to rerun for more precise values
-range_compute = 10000 #needs to be computable
-_range =        10000 # needs to be the same as range_compute
+range_compute = 1000000 #needs to be computable
+_range =        1000000 # needs to be the same as range_compute
 SHAmsg = "George"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
@@ -49,7 +48,7 @@ class QuantumCommunicator:
         random.seed(int(time.time()))
         self.numa = ",".join(str(np.random.randint(0, 2)) for _ in range(100000))
         self.corr = 3
-        self.ghostprotocol = 10000 if spin == -1 else 100000
+        self.ghostprotocol = 10000 if spin == -1 else 0
         
     def initialize_tracking_vars(self):
         self.ack = 0
@@ -66,7 +65,6 @@ class QuantumCommunicator:
         self.prime = 0
         self.prime_threshold = 3
         self.and_count = 0
-        self.rerun = rerun
         self.or_count = 0
         self.last_ghost_value = 0
         self.range = _range
@@ -186,7 +184,7 @@ class QuantumCommunicator:
                 self.i = self.i if hasattr(self, 'i') else 0
             self.i += 1
         self.ghostprotocol -= -spin
-        if (spin == -1 and self.ghostprotocol <= 0) or (spin == 1 and self.ghostprotocol >= self.rerun):
+        if (spin == -1 and self.ghostprotocol <= 0) or (spin == 1 and self.ghostprotocol >= range_compute):
             self.print_all_logs()
             self.should_mine = True
             exit()
