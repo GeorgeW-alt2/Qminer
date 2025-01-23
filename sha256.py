@@ -12,9 +12,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
 proof_of_work_size = 5
-rerun = 0 # simply add optimal ghost values to rerun for more precise values
-range_compute = 1000000 #needs to be computable
-_range =        1000000 # needs to be the same as range_compute
+rerun = 1000000 # simply add optimal ghost values to rerun for more precise values
+range_compute = 10000 #needs to be computable
+_range =        10000 # needs to be the same as range_compute
 SHAmsg = "George"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
