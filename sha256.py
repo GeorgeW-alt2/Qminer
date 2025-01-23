@@ -11,7 +11,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
-proof_of_work_size = 4
+proof_of_work_size = 5
 range_compute = 1000000 #needs to be computable
 _range =        1000000 # needs to be the same as range_compute
 SHAmsg = "George"
@@ -90,7 +90,6 @@ class QuantumCommunicator:
             return False
             
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gray = cv2.GaussianBlur(gray, (21, 21), 0)
         
         if self.data2 is None:
             self.data2 = gray
@@ -124,6 +123,7 @@ class QuantumCommunicator:
     def apply_quantum_logic(self, row, col):
         if 4 < row < 11:
             self.or_count += 1
+            return
             if 4 < col < 11:
                 self.and_count += 1
                 self.process_quantum_state()
