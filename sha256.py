@@ -302,7 +302,6 @@ class QuantumCommunicator:
             print("\nShutting down gracefully...")
             self.print_all_logs()
 
-        self.start_mining()
             
     def plot_quantum_data(self):
         plt.figure(figsize=(12, 8))
