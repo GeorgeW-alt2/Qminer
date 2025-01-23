@@ -2,13 +2,13 @@ import time
 import hashlib
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
-nonces
+
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
     target = '0' * target_zeros
     end_nonce = start_nonce + chunk_size
     
     for nonce in range(start_nonce, end_nonce):
-        message = f"block{nonce}{thread_id}".encode()
+        message = f"George{nonce}".encode()
         current_hash = hashlib.sha256(message).hexdigest()
         if current_hash.startswith(target):
             return nonce, current_hash, thread_id
@@ -24,7 +24,7 @@ def mine_sha256_threaded(target_zeros, num_threads=8, chunk_size=1000000):
             for thread_id in range(num_threads):
                 future = executor.submit(mine_chunk, start_nonce, chunk_size, target_zeros, thread_id)
                 futures.append(future)
-                start_nonce =
+                start_nonce = 0
             
             for future in as_completed(futures):
                 nonce, hash_result, thread_id = future.result()
