@@ -11,9 +11,9 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
-proof_of_work_size = 5
+proof_of_work_size = 10
 range_compute = 1000000 #needs to be computable
-_range =        1000000 #simply add optimal ghost values to range then rerun
+_range =        1119000000 #simply add optimal ghost values to range then rerun
 SHAmsg = "George"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
@@ -187,6 +187,7 @@ class QuantumCommunicator:
         if (spin == -1 and self.ghostprotocol <= 0) or (spin == 1 and self.ghostprotocol >= range_compute):
             self.print_all_logs()
             self.should_mine = True
+            input()
             exit()
         
     def log_ack_stats(self):
@@ -236,37 +237,24 @@ class QuantumCommunicator:
         if iteration == total:
             print()
             
-    def mine_sha256_threaded(self, target_zeros, ghost_values, num_threads=25, chunk_size=_range):
+    def mine_sha256_threaded(self, target_zeros, ghost_values, chunk_size=_range):
         start_time = time.time()
-        total_nonces = len(ghost_values) * num_threads
-        completed_nonces = 0
         
-        with ThreadPoolExecutor(max_workers=num_threads) as executor:
-            futures = []
-            for nonce in ghost_values:
-                print(f"\nTrying ghost value: {nonce}")
-                self.print_progress_bar(0, num_threads)
+        for nonce in ghost_values:
+            print(f"\nTrying ghost value: {nonce}")
+            result = mine_chunk(nonce, chunk_size, target_zeros, 0)
+            
+            if result[0]:
+                nonce, hash_result, _ = result
+                end_time = time.time()
+                print(f"\nFound matching hash!")
+                print(f"Nonce: {nonce}")
+                print(f"message: {SHAmsg}{nonce}")
+                print(f"Hash: {hash_result}")
+                print(f"Time taken: {end_time - start_time:.2f} seconds")
+                return nonce
                 
-                for thread_id in range(num_threads):
-                    future = executor.submit(mine_chunk, nonce, chunk_size, target_zeros, thread_id)
-                    futures.append(future)
-                
-                thread_completed = 0
-                for future in as_completed(futures):
-                    thread_completed += 1
-                    self.print_progress_bar(thread_completed, num_threads)
-                    
-                    nonce, hash_result, thread_id = future.result()
-                    if nonce:
-                        end_time = time.time()
-                        print(f"\nThread {thread_id} found matching hash!")
-                        print(f"Nonce: {nonce}")
-                        print(f"message: {SHAmsg}{nonce}")
-                        print(f"Hash: {hash_result}")
-                        print(f"Time taken: {end_time - start_time:.2f} seconds")
-                        
-                        return nonce
-                futures = []
+        return None
 
     def start_mining(self):
         print("\nStarting mining operation...")

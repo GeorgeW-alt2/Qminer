@@ -19,4 +19,5 @@ def mine_sha256(target_zeros = 5):
             
         nonce += 1
     return nonce
-mine_sha256(6)
+mine_sha256(7)
+input()
