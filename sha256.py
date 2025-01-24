@@ -11,9 +11,9 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 spin = 1  # 1 or -1
-proof_of_work_size = 8
-range_compute = 1000000 #needs to be computable
-_range =        1000000 #simply add optimal ghost values to range then rerun
+proof_of_work_size = 9
+range_compute = 200000000 #needs to be computable
+_range =        100000000000 #simply add optimal ghost values to range then rerun
 SHAmsg = "GeorgeW"
 message ="" #leave empty
 def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
@@ -225,9 +225,24 @@ class QuantumCommunicator:
                         data[ghost_value] = or_count
                 except (ValueError, IndexError):
                     continue
-        
+
+        # Sort by OR count
         sorted_ghost = sorted(data.items(), key=lambda x: x[1], reverse=True)
-        return [ghost for ghost, _ in sorted_ghost][:50]
+        max_or = sorted_ghost[0][1] if sorted_ghost else 0
+        ghost_values = []
+        
+        # Group values within 9 of max OR count
+        for ghost_value, or_count in data.items():
+            if max_or - 9 <= or_count:
+                if ghost_value - 1 in data:
+                    ghost_values.append(ghost_value - 1)
+                ghost_values.append(ghost_value)
+                if ghost_value + 1 in data:
+                    ghost_values.append(ghost_value + 1)
+        
+        # Remove duplicates while maintaining order
+        seen = set()
+        return [x for x in ghost_values if not (x in seen or seen.add(x))]
 
     def print_progress_bar(self, iteration, total, length=50):
         percent = (iteration / float(total)) * 100
@@ -262,6 +277,12 @@ class QuantumCommunicator:
             log_content = f.read()
         
         ghost_values = self.sort_ghost_by_or(log_content)
+        # Save to CSV
+        with open('ghost_values.csv', 'w') as f:
+            f.write('ghost_value,or_count\n')
+        for value in filtered_values:
+            f.write(f"{value},{data.get(value, 0)}\n")
+            f.flush()
         if ghost_values:
             print("Ghost values:",ghost_values)
             self.mine_sha256_threaded(proof_of_work_size, ghost_values)

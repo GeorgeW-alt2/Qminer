@@ -16,7 +16,15 @@ def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
         if current_hash.startswith(target):
             return nonce, current_hash, thread_id
     return None, None, None
-	
+    
+def load_ghost_values(filename='ghost_values.csv'):
+    ghost_values = []
+    with open(filename, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            ghost_values.append(int(row['ghost_value']))
+    return ghost_values
+    
 def mine_sha256_threaded(target_zeros, ghost_values, chunk_size):
     
     for nonce in ghost_values:
@@ -31,12 +39,12 @@ def mine_sha256_threaded(target_zeros, ghost_values, chunk_size):
             print(f"Hash: {hash_result}")
             return nonce
  
-proof_of_work_size = 8
-range_compute = 100000000 #needs to be computable
-_range =        1119000000 #simply add optimal ghost values to range then rerun
+proof_of_work_size = 9
+range_compute = 200000000 #needs to be computable
+_range =        100000000000 #simply add optimal ghost values to range then rerun
 SHAmsg = "GeorgeW"
 message ="" #leave empty
-ghost_values = [15845088000000, 15038576000000, 15004528000000, 11997664000000, 13530888000000, 14203336000000, 9736664000000, 10460184000000, 12761616000000, 8258768000000, 449008000000, 2421664000000, 4302816000000, 5576424000000, 6213760000000, 7586320000000, 3714424000000, 1781136000000, 11226264000000, 8991864000000, 1108688000000, 3076024000000, 4929512000000, 6895784000000]
+ghost_values = load_ghost_values()
 ghost_values = shuffle_array(ghost_values)	
 mine_sha256_threaded(proof_of_work_size, ghost_values, range_compute)
 input()
