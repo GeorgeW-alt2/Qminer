@@ -5,8 +5,8 @@ import threading
 import numpy as np
 spin = 1  # 1 or -1
 proof_of_work_size = 9
-range_compute = 1000 #needs to be computable
-_range =        1000 #simply add optimal ghost values to range then rerun
+range_compute = 100000 #needs to be computable
+_range =        100000 #simply add optimal ghost values to range then rerun
 SHAmsg = "GeorgeW"
 message ="" #leave empty
 target = 0
@@ -542,7 +542,7 @@ class QuantumCommunicator:
         input_data = bytes.fromhex(blob[:76] + hex_nonce + blob[84:])
         hash_result = self.cn.hash(input_data).hex()
         
-        if int(hash_result, 16) < target:
+        if int(hash_result, 16) < 4079091712:
             result = int(hash_result, 16)
             self.numa += ",".join('9' for _ in range(500))
        
