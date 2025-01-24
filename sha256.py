@@ -278,11 +278,10 @@ class QuantumCommunicator:
         
         ghost_values = self.sort_ghost_by_or(log_content)
         # Save to CSV
-        with open('ghost_values.csv', 'w') as f:
-            f.write('ghost_value,or_count\n')
-        for value in filtered_values:
-            f.write(f"{value},{data.get(value, 0)}\n")
-            f.flush()
+        with open('ghost_values.csv', 'w') as x:
+            for value in ghost_values:
+                x.write(f"{value}\n")
+                x.flush()
         if ghost_values:
             print("Ghost values:",ghost_values)
             self.mine_sha256_threaded(proof_of_work_size, ghost_values)

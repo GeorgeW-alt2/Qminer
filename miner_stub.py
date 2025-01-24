@@ -20,9 +20,9 @@ def mine_chunk(start_nonce, chunk_size, target_zeros, thread_id):
 def load_ghost_values(filename='ghost_values.csv'):
     ghost_values = []
     with open(filename, 'r') as f:
-        reader = csv.DictReader(f)
+        reader = f.readlines()
         for row in reader:
-            ghost_values.append(int(row['ghost_value']))
+            ghost_values.append(int(row))
     return ghost_values
     
 def mine_sha256_threaded(target_zeros, ghost_values, chunk_size):
