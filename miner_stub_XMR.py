@@ -200,8 +200,8 @@ def main():
     POOL = "xmr-us-east1.nanopool.org"
     PORT = 14444
     WALLET = "493hhZv9pApZsC7xKChhV5DMooBdaLz43cfAqDSHYsCiKxGi2Sfqk3n9Cnfwm4JYTXXR6TG3PpeTEK9qEyP3bBzcPXPAvGi"  # Replace with your XMR wallet address
-    WORKER = "py_miner"
-    
+    random_number = random.randint(1000, 9999)
+    WORKER = f"py_miner_{random_number}"    
     miner = XMRMiner(POOL, PORT, WALLET, WORKER)
     try:
         print("Starting miner...")
