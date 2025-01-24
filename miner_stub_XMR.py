@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 import random
 import time
-import matplotlib.pyplot as plt
 from collections import deque
 import hashlib
 import threading
