@@ -127,9 +127,11 @@ class XMRMiner:
             while self.running:
                 hex_nonce = format(nonce, '08x').encode().hex()
                 try:
+                    print("$")
                     input_data = bytes.fromhex(blob[:76] + hex_nonce + blob[84:])
                     hash_result = self.cn.hash(input_data).hex()
-                    
+                    print(int(hash_result, 16))
+
                     if int(hash_result, 16) < target:
                         print(f"Share found! Nonce: {hex_nonce}")
                         self.submit_share(job_id, hex_nonce, hash_result)
