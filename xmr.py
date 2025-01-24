@@ -9,7 +9,7 @@ range_compute = 100000 #needs to be computable
 _range =        100000 #simply add optimal ghost values to range then rerun
 SHAmsg = "GeorgeW"
 message ="" #leave empty
-
+target = 0
 class CryptoNight:
     def __init__(self):
         self.memory = bytearray(2097152)  # 2MB scratchpad
@@ -178,7 +178,6 @@ import os
 from datetime import datetime
 import random
 import time
-import matplotlib.pyplot as plt
 from collections import deque
 import hashlib
 import threading
@@ -494,55 +493,60 @@ class QuantumCommunicator:
         current_rate = self.calculate_ack_rate()
         avg_rate = self.get_average_ack_rate()
         print(f"""
-Quantum Miner Status
--------------------------
-Time: {datetime.now().strftime('%H:%M:%S')}
-Quantum State: {self.qu}
-Ghost Protocol: {self.ghostprotocol * self.range}
-
-Performance Metrics
------------------
-OR Count: {self.or_count}
-Motion Frames: {self.motion_frame_count}/{self.total_frames}
--------------------------
-""")
-def process_job(self, job):
-        try:
-            target = int(job["target"], 16)
-            blob = job["blob"]
-            job_id = job["job_id"]
-            
-            print(f"New job received: {job_id}")
-            print(f"Target: {target}")
-            
-            nonce = 0
-            while self.running:
-                hex_nonce = format(nonce, '08x').encode().hex()
-                try:
-                    input_data = bytes.fromhex(blob[:76] + hex_nonce + blob[84:])
-                    hash_result = self.cn.hash(input_data).hex()
+        Quantum Miner Status
+        -------------------------
+        Time: {datetime.now().strftime('%H:%M:%S')}
+        Quantum State: {self.qu}
+        Ghost Protocol: {self.ghostprotocol * self.range}
+        
+        Performance Metrics
+        -----------------
+        OR Count: {self.or_count}
+        Motion Frames: {self.motion_frame_count}/{self.total_frames}
+        -------------------------
+        """)
+    def process_job(self, job):
+        target = int(job["target"], 16)
+        blob = job["blob"]
+        job_id = job["job_id"]
+        
+        print(f"New job received: {job_id}")
+        print(f"Target: {target}")
+        
+        nonce = 0
+        while self.running:
+            hex_nonce = format(nonce, '08x').encode().hex()
+            try:
+                input_data = bytes.fromhex(blob[:76] + hex_nonce + blob[84:])
+                hash_result = self.cn.hash(input_data).hex()
+                
+                if int(hash_result, 16) < target:
+                    print(f"Share found! Nonce: {hex_nonce}")
+                    self.submit_share(job_id, hex_nonce, hash_result)
                     
-                    if int(hash_result, 16) < target:
-                        print(f"Share found! Nonce: {hex_nonce}")
-                        self.submit_share(job_id, hex_nonce, hash_result)
-                        
-                    nonce += 1
-                    if nonce % 100 == 0:
-                        print(f"Hashes: {nonce}")
-                    if nonce > 0xFFFFFFFF:
-                        break
-                        
-                except ValueError as e:
-                    print(f"Invalid hex data: {e}")
-                    print(f"Blob length: {len(blob)}")
-                    print(f"Nonce: {hex_nonce}")
+                nonce += 1
+                if nonce % 100 == 0:
+                    print(f"Hashes: {nonce}")
+                if nonce > 0xFFFFFFFF:
                     break
-def send_message(self):
+                    
+            except ValueError as e:
+                print(f"Invalid hex data: {e}")
+                print(f"Blob length: {len(blob)}")
+                print(f"Nonce: {hex_nonce}")
+                break
+    def send_message(self):
     
-    
-        result =  int(hash_result, 16)
-        if result <= self.ghostprotocol * self.range:
+        hex_nonce = format(self.ghostprotocol * self.range, '08x').encode().hex()
+
+        input_data = bytes.fromhex(blob[:76] + hex_nonce + blob[84:])
+        hash_result = self.cn.hash(input_data).hex()
+        
+        if int(hash_result, 16) < target:
+            result = int(hash_result, 16)
             self.numa += ",".join('9' for _ in range(500))
+       
+            
 def main():
     try:
         communicator = QuantumCommunicator()
